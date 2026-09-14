@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Early Warnings Dashboard - Phase 2</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.05em;
+        }
+
+        /* 3-CARD GRID LAYOUT */
+        .signals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .signal-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-top: 6px solid #667eea;
+        }
+
+        .signal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .signal-card.critical {
+            border-top-color: #e74c3c;
+        }
+
+        .signal-card.warning {
+            border-top-color: #f39c12;
+        }
+
+        .signal-card.opportunity {
+            border-top-color: #27ae60;
+        }
+
+        .card-header {
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .signal-card.critical .card-header {
+            background: #fadbd8;
+        }
+
+        .signal-card.warning .card-header {
+            background: #fdebd0;
+        }
+
+        .signal-card.opportunity .card-header {
+            background: #d5f4e6;
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .signal-card.critical .card-title {
+            color: #e74c3c;
+        }
+
+        .signal-card.warning .card-title {
+            color: #f39c12;
+        }
+
+        .signal-card.opportunity .card-title {
+            color: #27ae60;
+        }
+
+        .card-subtitle {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .signal-card.critical .confidence-badge {
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+        }
+
+        .signal-card.warning .confidence-badge {
+            color: #f39c12;
+            border: 2px solid #f39c12;
+        }
+
+        .signal-card.opportunity .confidence-badge {
+            color: #27ae60;
+            border: 2px solid #27ae60;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-chart {
+            height: 180px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .card-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .metric-mini {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-mini-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .signal-card.critical .metric-mini-value {
+            color: #e74c3c;
+        }
+
+        .signal-card.warning .metric-mini-value {
+            color: #f39c12;
+        }
+
+        .signal-card.opportunity .metric-mini-value {
+            color: #27ae60;
+        }
+
+        .metric-mini-label {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .card-footer {
+            background: #f0f4ff;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .signal-card.critical .card-footer {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .signal-card.warning .card-footer {
+            background: #fdebd0;
+            color: #f39c12;
+        }
+
+        .signal-card.opportunity .card-footer {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        /* MODAL FOR EXPANDED VIEW */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            width: 95%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .modal-title-section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .modal-title-section p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .modal-close {
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-box {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .metric-box-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .metric-box-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .evidence-sources {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .evidence-sources h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .source-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .source-badge {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.85em;
+        }
+
+        .data-table thead {
+            background: #f0f4ff;
+        }
+
+        .data-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f0f4ff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .signals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Early Warnings Dashboard</h1>
+            <p>Real-time signals with visual KPI summaries</p>
+        </header>
+
+        <!-- 3-CARD GRID LAYOUT -->
+        <div class="signals-grid" id="signals-container">
+            <!-- Cards will be loaded here by JavaScript -->
+            <div style="grid-column: 1/-1; text-align: center; color: white; padding: 40px;">
+                <div style="font-size: 1.2em;">Loading signals...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPANDED VIEW MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h2 id="modal-title"></h2>
+                    <p id="modal-subtitle"></p>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <div id="modal-body">
+                <!-- Content will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        let signals = [];
+
+        // Load and display signals
+        async function loadSignals() {
+            try {
+                const response = await fetch(`${API_BASE}/signals`);
+                signals = await response.json();
+
+                const container = document.getElementById('signals-container');
+                container.innerHTML = '';
+
+                signals.forEach(signal => {
+                    const card = createSignalCard(signal);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading signals:', error);
+                document.getElementById('signals-container').innerHTML = `
+                    <div style="grid-column: 1/-1; background: white; padding: 20px; border-radius: 8px; color: red;">
+                        Error loading signals: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Create a signal card
+        function createSignalCard(signal) {
+            const card = document.createElement('div');
+            card.className = `signal-card ${signal.type}`;
+
+            // Get icon
+            const iconMap = {
+                'critical': '🔴',
+                'warning': '⚠️',
+                'opportunity': '🟢'
+            };
+
+            // Create chart data based on signal type
+            let chartHTML = '';
+
+            if (signal.id === 'price_war') {
+                chartHTML = `
+                    <div class="card-chart">
+                        <canvas id="chart-${signal.id}"></canvas>
+                    </div>
+                `;
+            } else if (signal.id === 'format_crisis') {
+                chartHTML = `
+                    <div class="card-chart">
+                        <canvas id="chart-${signal.id}"></canvas>
+                    </div>
+                `;
+            } else if (signal.id === 'gel_opportunity') {
+                chartHTML = `
+                    <div class="card-chart">
+                        <canvas id="chart-${signal.id}"></canvas>
+                    </div>
+                `;
+            }
+
+            // Get main metrics
+            const metrics = signal.metrics || {};
+            const metricEntries = Object.entries(metrics).slice(0, 4);
+
+            let metricsHTML = '';
+            if (metricEntries.length > 0) {
+                metricsHTML = '<div class="card-metrics">';
+                metricEntries.forEach(([key, value]) => {
+                    metricsHTML += `
+                        <div class="metric-mini">
+                            <div class="metric-mini-value">${value}</div>
+                            <div class="metric-mini-label">${key.replace(/_/g, ' ')}</div>
+                        </div>
+                    `;
+                });
+                metricsHTML += '</div>';
+            }
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-icon">${iconMap[signal.type]}</div>
+                    <div class="card-title">${signal.title}</div>
+                    <div class="card-subtitle">${signal.subtitle}</div>
+                    <div class="confidence-badge">${signal.confidence}% Confidence</div>
+                </div>
+                <div class="card-body">
+                    ${chartHTML}
+                    ${metricsHTML}
+                </div>
+                <div class="card-footer">Click to see full evidence →</div>
+            `;
+
+            card.onclick = () => showModal(signal);
+
+            // After card is added to DOM, create the chart
+            setTimeout(() => {
+                if (signal.id === 'price_war') {
+                    createPriceWarChart(signal);
+                } else if (signal.id === 'format_crisis') {
+                    createFormatChart(signal);
+                } else if (signal.id === 'gel_opportunity') {
+                    createGelChart(signal);
+                }
+            }, 100);
+
+            return card;
+        }
+
+        // Chart creation functions
+        function createPriceWarChart(signal) {
+            const ctx = document.getElementById(`chart-${signal.id}`);
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [
+                        {
+                            label: 'Our Price',
+                            data: [4.39, 4.39, 4.39, 4.39],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Competitor Price',
+                            data: [3.95, 3.92, 3.93, 3.93],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 3.8,
+                            max: 4.5,
+                            ticks: { font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createFormatChart(signal) {
+            const ctx = document.getElementById(`chart-${signal.id}`);
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Aerosol', 'Stick', 'Gel', 'Roll-On'],
+                    datasets: [{
+                        data: [45, 35, 15, 5],
+                        backgroundColor: [
+                            '#667eea',
+                            '#e74c3c',
+                            '#27ae60',
+                            '#f39c12'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function createGelChart(signal) {
+            const ctx = document.getElementById(`chart-${signal.id}`);
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2024', '2025', '2026'],
+                    datasets: [{
+                        label: 'Gel Market Size ($M)',
+                        data: [160, 175, 180],
+                        backgroundColor: '#27ae60'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 200
+                        }
+                    }
+                }
+            });
+        }
+
+        // Modal functions
+        function showModal(signal) {
+            const modal = document.getElementById('modal');
+            document.getElementById('modal-title').textContent = signal.title;
+            document.getElementById('modal-subtitle').textContent = signal.subtitle;
+
+            // Build metrics grid
+            let metricsHTML = '<div class="modal-metrics-grid">';
+            Object.entries(signal.metrics).forEach(([key, value]) => {
+                metricsHTML += `
+                    <div class="metric-box">
+                        <div class="metric-box-label">${key.replace(/_/g, ' ')}</div>
+                        <div class="metric-box-value">${value}</div>
+                    </div>
+                `;
+            });
+            metricsHTML += '</div>';
+
+            // Build evidence sources
+            let sourcesHTML = '<div class="evidence-sources">';
+            sourcesHTML += '<h4>📊 Data Sources Validating This Signal:</h4>';
+            sourcesHTML += '<div class="source-list">';
+            signal.evidence_sources.forEach(source => {
+                sourcesHTML += `<span class="source-badge">${source}</span>`;
+            });
+            sourcesHTML += '</div></div>';
+
+            // Build supporting data table
+            let tableHTML = '';
+            if (signal.supporting_data && Object.keys(signal.supporting_data).length > 0) {
+                tableHTML = '<h4 style="margin-top: 20px; color: #667eea;">📋 Supporting Data from CSV:</h4>';
+                tableHTML += '<table class="data-table"><thead><tr>';
+
+                const keys = Object.keys(signal.supporting_data).slice(0, 6);
+                keys.forEach(key => {
+                    tableHTML += `<th>${key}</th>`;
+                });
+                tableHTML += '</tr></thead><tbody><tr>';
+                keys.forEach(key => {
+                    let value = signal.supporting_data[key];
+                    if (typeof value === 'number') value = value.toFixed(2);
+                    tableHTML += `<td>${value}</td>`;
+                });
+                tableHTML += '</tr></tbody></table>';
+            }
+
+            document.getElementById('modal-body').innerHTML = `
+                ${metricsHTML}
+                ${sourcesHTML}
+                ${tableHTML}
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modal').onclick = (e) => {
+            if (e.target.id === 'modal') closeModal();
+        };
+
+        // Load signals on page load
+        window.addEventListener('load', loadSignals);
+    </script>
+</body>
+</html>

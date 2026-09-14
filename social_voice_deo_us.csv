@@ -1,0 +1,46 @@
+week_ending_date,platform,brand_name,sentiment_score,mention_count,impression_count,engagement_rate,consumer_complaints_count,positive_reviews_pct,negative_reviews_pct,trending_hashtags,influencer_posts,influencer_reach,product_quality_score,eco_concern_mentions,price_concern_mentions,format_preference_trend,key_themes
+2026-09-07,Twitter,Dove,0.72,1245,34567,4.2,23,78,12,#DoveDeodorant #FreshAllDay,12,2345000,4.6,45,34,Aerosol gaining,Eco-friendly commitment,Affordability
+2026-09-07,Twitter,Degree,0.68,892,28934,3.8,34,74,18,#DegreeMotion #MotionSense,8,1567000,4.4,28,52,Format neutral,Performance-focused,Value proposition
+2026-09-07,Twitter,Old Spice,0.65,756,25678,3.5,42,72,19,#OldSpice #ManYourManCan,6,1234000,4.3,22,68,Stick declining,Humor-driven,Male-focused positioning
+2026-09-07,Twitter,Secret,0.74,1089,31245,4.4,18,80,11,#SecretStrong #WomensPower,14,2789000,4.7,38,21,Stick stable,Female empowerment,Strength narrative
+2026-09-07,Twitter,Native,0.78,2345,45678,5.2,12,85,8,#NaturalDeodorant #CleanBeauty,26,5234000,4.8,89,15,Gel gaining,Natural ingredients,Sustainability focus
+2026-09-07,Twitter,Rexona,0.62,456,18234,2.9,56,68,24,#RexonaMotion,3,678000,4.1,34,78,Roll-on declining,Price-driven,Limited awareness
+2026-09-07,Instagram,Dove,0.71,3456,125678,5.1,29,76,15,#DoveDeodorant #SelfCare,18,3456000,4.6,52,41,Aerosol gaining,Inclusivity,Sustainability story
+2026-09-07,Instagram,Secret,0.73,2789,98765,5.8,21,79,12,#SecretDeodorant #FierceFemale,22,4123000,4.7,45,28,Stick stable,Female empowerment,Quality focus
+2026-09-07,Instagram,Native,0.76,4123,156234,6.2,14,83,9,#NativeDeodorant #EcoWarrior,31,6789000,4.8,95,12,Gel gaining,Eco-messaging,Refillable innovation
+2026-09-07,Reddit,Dove,0.68,234,8945,2.3,38,71,19,r/FrugalBeauty r/ZeroWaste,0,0,4.5,62,45,Aerosol vs Stick debate,Eco credentials questioned,Price satisfaction
+2026-09-07,Reddit,Old Spice,0.64,178,6234,2.0,52,68,22,r/MaleGrooming r/Humor,0,0,4.3,28,56,Questionable eco-friendliness,Scent opinions polarized,Value vs premium
+2026-09-07,Reddit,Native,0.77,567,18234,3.1,8,82,6,r/ZeroWaste r/EcoFriendly,0,0,4.7,124,8,Strong eco positioning,Refillable praised,Price acceptable to eco-conscious
+2026-09-07,TikTok,Dove,0.70,2345,567234,7.8,25,75,16,#DoveDeodorant #FYP,45,8923000,4.6,48,38,Younger demo favors aerosol,Sustainability message resonates,UGC engagement high
+2026-09-07,TikTok,Secret,0.72,1876,489234,6.9,19,77,13,#SecretDeodorant #FemalePower,38,7234000,4.7,42,24,Female audience strong,Empowerment themes viral,Quality and strength angle works
+2026-09-07,TikTok,Native,0.74,3421,812345,8.2,11,81,7,#NativeDeodorant #EcoTok,52,9876000,4.8,98,11,Eco-conscious younger demographic,Refillable format viral,Premium acceptable to Gen Z
+2026-09-14,Twitter,Dove,0.71,1267,35123,4.3,25,77,14,#DoveDeodorant #SustainableLiving,13,2412000,4.6,48,36,Aerosol gaining,Eco-friendly focus,Affordability balance
+2026-09-14,Twitter,Degree,0.67,912,29567,3.9,36,73,20,#DegreeMotion #Performance,9,1623000,4.4,30,54,Format neutral,Performance claims,Value question
+2026-09-14,Twitter,Secret,0.73,1123,32456,4.5,20,79,12,#SecretStrong #Women,15,2856000,4.7,40,22,Stick stable,Empowerment strong,Strength claims validated
+2026-09-14,Twitter,Native,0.77,2412,46789,5.3,13,84,9,#NaturalDeodorant #EcoTok,27,5401000,4.8,92,14,Gel gaining fast,Natural positioning strong,Sustainability leadership
+2026-09-14,Instagram,Dove,0.70,3512,127845,5.2,31,75,17,#DoveDeodorant #SelfLove,19,3534000,4.6,54,43,Aerosol gaining,Inclusivity focus,Eco-messaging increasing
+2026-09-14,Instagram,Secret,0.72,2834,100234,5.9,22,78,13,#SecretStrong #Female,23,4189000,4.7,47,29,Stick stable,Empowerment peak,Quality and strength consistent
+2026-09-14,Instagram,Native,0.75,4234,158912,6.3,15,82,10,#NativeDeodorant #EcoWarrior,32,6901000,4.8,97,13,Gel gaining,Eco-messaging viral,Refillable format praised
+2026-09-14,Reddit,Dove,0.67,245,9123,2.4,40,70,20,r/FrugalBeauty r/Sustainability,0,0,4.5,64,47,Eco debate active,Eco-claims scrutinized,Affordability praised
+2026-09-14,Reddit,Secret,0.71,189,7456,2.2,22,76,14,r/FemaleGrooming r/Beauty,0,0,4.6,38,32,Female focus strong,Quality trusted,Loyalty high
+2026-09-14,Reddit,Native,0.76,612,19678,3.2,9,81,7,r/ZeroWaste r/EcoFriendly,0,0,4.7,126,9,Eco-leadership recognized,Premium justified,Refillable innovation praised
+2026-09-14,TikTok,Dove,0.69,2456,578234,7.9,27,74,17,#DoveDeodorant #Sustainability,46,9034000,4.6,50,40,Younger demo aerosol preference,UGC engagement peak,Eco-message gaining traction
+2026-09-14,TikTok,Secret,0.71,1923,498234,7.0,20,76,14,#SecretDeodorant #FemaleEmpowerment,39,7312000,4.7,44,25,Female audience expansion,Empowerment themes resonate,Strength positioning strong
+2026-09-14,TikTok,Native,0.73,3512,824567,8.3,12,80,8,#NativeDeodorant #EcoTok,53,9967000,4.8,100,12,Gen Z eco-conscious preference,Refillable innovation viral,Premium price acceptance growing
+2026-09-21,Twitter,Dove,0.70,1289,36245,4.4,27,76,15,#DoveDeodorant #EcoChoice,14,2478000,4.6,50,38,Aerosol gaining,Eco-positioning,Affordability angle
+2026-09-21,Twitter,Degree,0.66,934,30123,4.0,38,72,21,#DegreeMotion #Dry,10,1678000,4.4,32,56,Performance focus,Value proposition,Differentiation needed
+2026-09-21,Twitter,Secret,0.72,1145,33678,4.6,21,78,13,#SecretStrong #Confidence,16,2923000,4.7,42,23,Stick stable,Female empowerment,Quality leadership
+2026-09-21,Twitter,Native,0.76,2478,48234,5.4,14,83,10,#NaturalDeodorant #EcoWarrior,28,5567000,4.8,94,15,Gel market growth,Eco-leadership,Natural ingredients preference
+2026-09-21,Instagram,Dove,0.69,3578,129123,5.3,33,74,18,#DoveDeodorant #Confidence,20,3612000,4.6,56,45,Aerosol gaining,Eco-messaging,Inclusivity focus
+2026-09-21,Instagram,Secret,0.71,2879,102145,6.0,23,77,14,#SecretDeodorant #Strength,24,4256000,4.7,49,30,Stick stable,Empowerment peak,Quality consistent
+2026-09-21,Instagram,Native,0.74,4312,161234,6.4,16,81,11,#NativeDeodorant #Refillable,33,7023000,4.8,99,14,Gel gaining,Eco-innovation,Sustainability leadership
+2026-09-21,TikTok,Dove,0.68,2534,589345,8.0,29,73,18,#DoveDeodorant #TikTok,47,9145000,4.6,52,42,Aerosol format trend,UGC engagement high,Eco-story growing
+2026-09-21,TikTok,Secret,0.70,1967,507456,7.1,21,75,15,#SecretDeodorant #FemaleForce,40,7423000,4.7,46,26,Female audience growth,Empowerment narrative,Strength claims viral
+2026-09-21,TikTok,Native,0.72,3612,836789,8.4,13,79,9,#NativeDeodorant #EcoFriendly,54,10078000,4.8,102,13,Gen Z eco preference,Refillable innovation,Premium value acceptance
+2026-09-28,Twitter,Dove,0.69,1312,37456,4.5,29,75,16,#DoveDeodorant #Sustainability,15,2534000,4.6,52,40,Aerosol gaining,Eco-focus,Affordability strength
+2026-09-28,Twitter,Degree,0.65,956,31234,4.1,40,71,22,#DegreeMotion #Dry,11,1723000,4.4,34,58,Performance claim,Competitive pricing,Differentiation gap
+2026-09-28,Twitter,Secret,0.71,1167,34789,4.7,22,77,14,#SecretStrong #Women,17,2989000,4.7,44,24,Stick stable,Empowerment strong,Quality trusted
+2026-09-28,Twitter,Native,0.75,2545,49567,5.5,15,82,11,#NativeDeodorant #EcoTok,29,5723000,4.8,96,16,Gel growth,Eco-leadership,Natural preference rising
+2026-09-28,Instagram,Dove,0.68,3645,131245,5.4,35,73,19,#DoveDeodorant #SelfCare,21,3678000,4.6,58,47,Aerosol gaining,Eco-positioning,Inclusivity angle
+2026-09-28,Instagram,Secret,0.70,2923,104234,6.1,24,76,15,#SecretDeodorant #Confidence,25,4312000,4.7,51,31,Stick stable,Empowerment leadership,Quality consistent
+2026-09-28,Instagram,Native,0.73,4389,163456,6.5,17,80,12,#NativeDeodorant #EcoWarrior,34,7145000,4.8,101,15,Gel growing,Eco-innovation,Sustainability message viral

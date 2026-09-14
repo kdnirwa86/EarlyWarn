@@ -1,0 +1,694 @@
+
+1<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Early Warnings Dashboard - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .stat-box .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-box .label {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .signals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .signal-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .signal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .signal-card.critical {
+            border-top: 5px solid #e74c3c;
+        }
+
+        .signal-card.warning {
+            border-top: 5px solid #f39c12;
+        }
+
+        .signal-card.opportunity {
+            border-top: 5px solid #27ae60;
+        }
+
+        .signal-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .signal-card.critical .signal-header {
+            background: #fadbd8;
+        }
+
+        .signal-card.warning .signal-header {
+            background: #fdebd0;
+        }
+
+        .signal-card.opportunity .signal-header {
+            background: #d5f4e6;
+        }
+
+        .signal-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .signal-title-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .signal-card.critical .signal-title-section h3 {
+            color: #e74c3c;
+        }
+
+        .signal-card.warning .signal-title-section h3 {
+            color: #f39c12;
+        }
+
+        .signal-card.opportunity .signal-title-section h3 {
+            color: #27ae60;
+        }
+
+        .signal-subtitle {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .signal-body {
+            padding: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .signal-card.active .signal-body {
+            max-height: 800px;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .signal-body h4 {
+            color: #667eea;
+            margin: 15px 0 10px 0;
+            font-size: 1em;
+        }
+
+        .signal-body h4:first-child {
+            margin-top: 0;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95em;
+        }
+
+        .metric-label {
+            color: #666;
+        }
+
+        .metric-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .metric-value.negative {
+            color: #e74c3c;
+        }
+
+        .metric-value.positive {
+            color: #27ae60;
+        }
+
+        .confidence-bar {
+            margin: 15px 0;
+        }
+
+        .confidence-label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #667eea;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .signal-card.critical .bar-fill {
+            background: #e74c3c;
+        }
+
+        .signal-card.warning .bar-fill {
+            background: #f39c12;
+        }
+
+        .signal-card.opportunity .bar-fill {
+            background: #27ae60;
+        }
+
+        .evidence-section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        .evidence-section h5 {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .evidence-list {
+            list-style: none;
+        }
+
+        .evidence-list li {
+            padding: 4px 0;
+            font-size: 0.9em;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .evidence-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .action-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-top: 12px;
+            transition: background 0.3s;
+        }
+
+        .action-button:hover {
+            background: #764ba2;
+        }
+
+        .action-button.critical-btn {
+            background: #e74c3c;
+        }
+
+        .action-button.critical-btn:hover {
+            background: #c0392b;
+        }
+
+        .action-button.warning-btn {
+            background: #f39c12;
+        }
+
+        .action-button.warning-btn:hover {
+            background: #d68910;
+        }
+
+        .action-button.opportunity-btn {
+            background: #27ae60;
+        }
+
+        .action-button.opportunity-btn:hover {
+            background: #229954;
+        }
+
+        .footer {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .expand-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+
+        .signal-card.active .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .signal-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .signal-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .metric-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .legend h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.critical {
+            background: #e74c3c;
+        }
+
+        .legend-dot.warning {
+            background: #f39c12;
+        }
+
+        .legend-dot.opportunity {
+            background: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Early Warnings Dashboard</h1>
+            <p>Real-time threat and opportunity intelligence for Deodorant Category</p>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="value">3</div>
+                    <div class="label">Active Signals</div>
+                </div>
+                <div class="stat-box">
+                    <div class="value">1</div>
+                    <div class="label">Critical Threats</div>
+                </div>
+                <div class="stat-box">
+                    <div class="value">1</div>
+                    <div class="label">Opportunities</div>
+                </div>
+                <div class="stat-box">
+                    <div class="value">94%</div>
+                    <div class="label">Avg Confidence</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>Signal Status Legend</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-dot critical"></div>
+                    <span><strong>Critical</strong> (Red) - Immediate action required, >90% confidence</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot warning"></div>
+                    <span><strong>Warning</strong> (Orange) - Monitor closely, 70-90% confidence</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot opportunity"></div>
+                    <span><strong>Opportunity</strong> (Green) - Growth potential, >75% confidence</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="signals-grid">
+            <!-- CRITICAL SIGNAL -->
+            <div class="signal-card critical" onclick="toggleSignal(this)">
+                <div class="signal-header">
+                    <div style="display: flex; align-items: center; flex: 1;">
+                        <div class="signal-icon">🔴</div>
+                        <div class="signal-title-section">
+                            <h3>Competitive Price War</h3>
+                            <div class="signal-subtitle">Old Spice aggressive pricing attack</div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+
+                <div class="signal-body">
+                    <h4>Current Threat Level</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">Competitor Price vs Ours:</span>
+                        <span class="metric-value negative">-10.9%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Our Premium Gap:</span>
+                        <span class="metric-value positive">+18.7pp</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Our Conversion Impact:</span>
+                        <span class="metric-value negative">-22%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Share Loss Rate:</span>
+                        <span class="metric-value negative">-1.8pp/week</span>
+                    </div>
+
+                    <h4>Signal Confidence</h4>
+                    <div class="confidence-bar">
+                        <div class="confidence-label">
+                            <span>Confidence Score</span>
+                            <span><strong>94%</strong></span>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="width: 94%"></div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-section">
+                        <h5>Evidence (5 Data Sources Aligned)</h5>
+                        <ul class="evidence-list">
+                            <li>Circana: Old Spice ASP $3.93 vs Dove $4.39 (confirmed)</li>
+                            <li>Competitive Intelligence: BOGO promotion active 3 weeks</li>
+                            <li>E-Commerce: Price gap wider online (-16% vs -9% offline)</li>
+                            <li>Social Voice: Consumer sentiment "competitor = better value"</li>
+                            <li>5 markets affected: NY, LA, Chicago, Houston, Phoenix</li>
+                        </ul>
+                    </div>
+
+                    <h4>Financial Impact</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">Est. Monthly Revenue at Risk:</span>
+                        <span class="metric-value negative">$2.1M</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Response Window:</span>
+                        <span class="metric-value positive">48 hours</span>
+                    </div>
+
+                    <h4>Recommended Actions</h4>
+                    <ul class="evidence-list">
+                        <li>Review pricing strategy in 5 affected markets</li>
+                        <li>Evaluate promotional response (discount vs innovation)</li>
+                        <li>Increase media spend to defend awareness</li>
+                        <li>Monitor competitor promotion end date</li>
+                    </ul>
+
+                    <button class="action-button critical-btn">Set Alert & Review Pricing</button>
+                </div>
+            </div>
+
+            <!-- WARNING SIGNAL -->
+            <div class="signal-card warning" onclick="toggleSignal(this)">
+                <div class="signal-header">
+                    <div style="display: flex; align-items: center; flex: 1;">
+                        <div class="signal-icon">⚠️</div>
+                        <div class="signal-title-section">
+                            <h3>Format Crisis</h3>
+                            <div class="signal-subtitle">Stick declining, Aerosol gaining</div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+
+                <div class="signal-body">
+                    <h4>Market Shift Metrics</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">Stick Format Share Change:</span>
+                        <span class="metric-value negative">-8pp</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Aerosol Format Gain:</span>
+                        <span class="metric-value positive">+6pp</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Gel Format Emergence:</span>
+                        <span class="metric-value positive">+4pp YoY</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Timeframe:</span>
+                        <span class="metric-value">4-week trend</span>
+                    </div>
+
+                    <h4>Signal Confidence</h4>
+                    <div class="confidence-bar">
+                        <div class="confidence-label">
+                            <span>Confidence Score</span>
+                            <span><strong>88%</strong></span>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="width: 88%"></div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-section">
+                        <h5>Evidence (4 Data Sources Aligned)</h5>
+                        <ul class="evidence-list">
+                            <li>Circana: Stick -8pp confirmed in 3 consecutive weeks</li>
+                            <li>E-Commerce: Gel conversion 3.7% vs Stick 3.0% (online preference shift)</li>
+                            <li>Social Voice: #aerosolfree trending; eco-concerns +124% (eco-activism)</li>
+                            <li>Macro Context: EU propellant ban 2027; CA packaging rules Q1 2027</li>
+                        </ul>
+                    </div>
+
+                    <h4>Root Cause Analysis</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">Eco-concerns trend:</span>
+                        <span class="metric-value positive">Accelerating</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Regulatory impact:</span>
+                        <span class="metric-value positive">Confirmed 2027</span>
+                    </div>
+
+                    <h4>Recommended Actions</h4>
+                    <ul class="evidence-list">
+                        <li>Accelerate Aerosol innovation roadmap</li>
+                        <li>Investigate Gel format market potential (younger demographic leading)</li>
+                        <li>Evaluate refillable/sustainable format options</li>
+                        <li>Review supply chain for propellant alternatives</li>
+                    </ul>
+
+                    <button class="action-button warning-btn">Monitor & Plan Innovation</button>
+                </div>
+            </div>
+
+            <!-- OPPORTUNITY SIGNAL -->
+            <div class="signal-card opportunity" onclick="toggleSignal(this)">
+                <div class="signal-header">
+                    <div style="display: flex; align-items: center; flex: 1;">
+                        <div class="signal-icon">🟢</div>
+                        <div class="signal-title-section">
+                            <h3>Gel Format Emerging</h3>
+                            <div class="signal-subtitle">Strong growth opportunity, eco-driven</div>
+                        </div>
+                    </div>
+                    <div class="expand-icon">▼</div>
+                </div>
+
+                <div class="signal-body">
+                    <h4>Opportunity Metrics</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">Format Growth Rate:</span>
+                        <span class="metric-value positive">+12% YoY</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Market Segment Size:</span>
+                        <span class="metric-value positive">$180M+ annual</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">E-Commerce Conversion:</span>
+                        <span class="metric-value positive">+40% vs Stick</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Target Demographics:</span>
+                        <span class="metric-value">Female 25-40, Gen Z eco-conscious</span>
+                    </div>
+
+                    <h4>Signal Confidence</h4>
+                    <div class="confidence-bar">
+                        <div class="confidence-label">
+                            <span>Confidence Score</span>
+                            <span><strong>85%</strong></span>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+
+                    <div class="evidence-section">
+                        <h5>Evidence (4 Data Sources Aligned)</h5>
+                        <ul class="evidence-list">
+                            <li>Circana: Gel format +4pp weekly momentum</li>
+                            <li>E-Commerce: Gel 3.7% conversion vs Aerosol 3.5%, Stick 3.0%</li>
+                            <li>Social Voice: TikTok Gel engagement +40% WoW; Gen Z leading adoption</li>
+                            <li>Competitive: Native brand leading Gel segment (0.75 sentiment vs our 0.69)</li>
+                        </ul>
+                    </div>
+
+                    <h4>Market Dynamics</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">Competitive Position:</span>
+                        <span class="metric-value">Native leading (strength position)</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Price Elasticity:</span>
+                        <span class="metric-value positive">Less elastic (can sustain premium)</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Consumer Willingness:</span>
+                        <span class="metric-value positive">High (eco-conscious segment)</span>
+                    </div>
+
+                    <h4>Recommended Actions</h4>
+                    <ul class="evidence-list">
+                        <li>Accelerate Gel product innovation (if not in pipeline)</li>
+                        <li>Develop eco-messaging to compete with Native positioning</li>
+                        <li>Target digital marketing to TikTok/Instagram (younger demo)</li>
+                        <li>Consider refillable/sustainable packaging to differentiate</li>
+                        <li>Evaluate market entry window (before category consolidation)</li>
+                    </ul>
+
+                    <button class="action-button opportunity-btn">Explore Market Entry</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Dashboard Last Updated:</strong> September 28, 2026 | <strong>Next Update:</strong> October 5, 2026</p>
+            <p>All signals validated across multiple data sources. Click any signal card to expand and see detailed evidence.</p>
+            <p style="margin-top: 10px; font-size: 0.85em; color: #999;">Data Sources: Circana 1000 | GDD Nielsen POS | Competitive Intelligence | E-Commerce Analytics | Social Voice | Macro Context</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleSignal(element) {
+            // Close other open signals
+            document.querySelectorAll('.signal-card.active').forEach(card => {
+                if (card !== element) {
+                    card.classList.remove('active');
+                }
+            });
+            // Toggle current signal
+            element.classList.toggle('active');
+        }
+
+        // Open first signal by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.signal-card').classList.add('active');
+        });
+    </script>
+</body>
+</html>

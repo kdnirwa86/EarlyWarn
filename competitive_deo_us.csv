@@ -1,0 +1,39 @@
+week_ending_date,market,competitor_brand,our_brand,competitor_price,our_price,price_gap_pct,competitor_promotion_flag,promo_type,promo_discount_pct,promo_duration_days,competitor_distribution_pct,our_distribution_pct,distribution_gap_pct,competitor_new_sku_launch,sku_description,competitor_media_spend_usd,our_media_spend_usd,media_spend_gap_pct,competitive_win_loss_flag,win_loss_category,retailer_name,channel_type
+07-09-2026,New York,Degree,Dove,4.79,4.29,11.7,1,Buy One Get One,20,7,92,88,-4,0,None,125000,95000,24,1,Pricing,Walmart,Grocery
+07-09-2026,Los Angeles,Old Spice,Dove,3.99,4.29,-7,1,Bundle Discount,15,14,85,90,5,1,Old Spice Swagger Spray,89000,78000,12,0,Distribution,Target,Mass Merch
+07-09-2026,Chicago,Secret,Dove,3.79,4.29,-11.6,0,None,0,0,87,88,1,0,None,56000,65000,-13,1,Loyalty,Walgreens,Drug
+07-09-2026,Houston,Rexona,Dove,3.49,4.29,-18.6,1,Loyalty Bonus,10,30,72,89,17,0,None,34000,45000,-24,1,Pricing,Walmart,Grocery
+07-09-2026,Phoenix,Axe,Dove,3.69,4.29,-13.9,1,Clearance,25,7,68,86,18,0,None,67000,82000,-18,0,Distribution,Target,Mass Merch
+07-09-2026,Philadelphia,Gillette,Dove,4.99,4.29,16.3,0,None,0,0,76,87,11,1,Gillette Styler Deodorant,98000,72000,26,0,Innovation,Walgreens,Drug
+07-09-2026,San Antonio,Suave,Dove,2.49,4.29,-41.9,1,Volume Discount,12,21,45,88,43,1,Suave Value Pack Aerosol,23000,89000,-74,1,Pricing,Walmart,Grocery
+07-09-2026,San Diego,Native,Dove,4.99,4.29,16.3,1,Subscription Discount,8,90,52,87,35,0,None,112000,91000,19,0,Innovation,Target,E-commerce
+07-09-2026,Dallas,Speed Stick,Dove,2.99,4.29,-30.3,0,None,0,0,78,89,11,0,None,34000,56000,-39,1,Pricing,Walmart,Grocery
+07-09-2026,San Jose,Mitchum,Dove,3.29,4.29,-23.3,1,Bundle,18,14,65,85,20,0,None,45000,78000,-42,1,Pricing,CVS,Drug
+14-09-2026,New York,Degree,Dove,4.75,4.29,10.7,1,Buy One Get One,20,7,91,87,-4,0,None,128000,98000,23,1,Pricing,Walmart,Grocery
+14-09-2026,Los Angeles,Old Spice,Dove,3.99,4.29,-7,1,Bundle Discount,15,14,84,89,5,1,Old Spice Swagger Premium,91000,80000,12,0,Distribution,Target,Mass Merch
+14-09-2026,Chicago,Secret,Dove,3.75,4.29,-12.6,0,None,0,0,88,87,-1,0,None,58000,67000,-13,1,Loyalty,Walgreens,Drug
+14-09-2026,Houston,Rexona,Dove,3.45,4.29,-19.6,1,Loyalty Bonus,10,30,71,88,17,0,None,36000,47000,-23,1,Pricing,Walmart,Grocery
+14-09-2026,Phoenix,Axe,Dove,3.65,4.29,-14.9,1,Clearance,25,7,67,85,18,0,None,69000,84000,-18,0,Distribution,Target,Mass Merch
+14-09-2026,Philadelphia,Native,Dove,5.09,4.29,18.6,1,Subscription Discount,8,90,53,86,33,1,Native Refillable Deodorant,114000,93000,18,0,Innovation,Target,E-commerce
+14-09-2026,San Antonio,Suave,Dove,2.45,4.29,-42.9,1,Volume Discount,12,21,44,87,43,1,Suave Value Pack Promotion,25000,91000,-73,1,Pricing,Walmart,Grocery
+14-09-2026,San Diego,Gillette,Dove,5.09,4.29,18.6,0,None,0,0,75,86,11,1,Gillette SkinGuard Spray,100000,74000,26,0,Innovation,Walgreens,Drug
+14-09-2026,Dallas,Speed Stick,Dove,2.95,4.29,-31.3,0,None,0,0,77,88,11,0,None,32000,58000,-45,1,Pricing,Walmart,Grocery
+14-09-2026,San Jose,Mitchum,Dove,3.25,4.29,-24.2,1,Bundle,18,14,64,84,20,0,None,47000,80000,-41,1,Pricing,CVS,Drug
+21-09-2026,New York,Degree,Dove,4.72,4.29,10,1,Buy One Get One,20,7,90,86,-4,0,None,131000,101000,22,1,Pricing,Walmart,Grocery
+21-09-2026,Los Angeles,Old Spice,Dove,3.95,4.29,-7.9,1,Bundle Discount,15,14,83,88,5,1,Old Spice Premium Flex,93000,82000,12,0,Distribution,Target,Mass Merch
+21-09-2026,Chicago,Secret,Dove,3.71,4.29,-13.5,0,None,0,0,89,86,-3,0,None,60000,69000,-13,1,Loyalty,Walgreens,Drug
+21-09-2026,Houston,Rexona,Dove,3.41,4.29,-20.5,1,Loyalty Bonus,10,30,70,87,17,0,None,38000,49000,-22,1,Pricing,Walmart,Grocery
+21-09-2026,Phoenix,Axe,Dove,3.61,4.29,-15.9,1,Clearance,25,7,66,84,18,0,None,71000,86000,-17,0,Distribution,Target,Mass Merch
+21-09-2026,Philadelphia,Gillette,Dove,5.05,4.29,17.7,1,Innovation Launch,12,30,76,85,9,1,Gillette SkinGuard Spray,102000,76000,25,0,Innovation,Walgreens,Drug
+21-09-2026,San Antonio,Suave,Dove,2.41,4.29,-43.8,1,Volume Discount,12,21,43,86,43,1,Suave Extreme Value Pack,27000,93000,-71,1,Pricing,Walmart,Grocery
+21-09-2026,San Diego,Native,Dove,5.05,4.29,17.7,1,Subscription Discount,8,90,54,85,31,0,None,116000,95000,17,0,Innovation,Target,E-commerce
+21-09-2026,Dallas,Speed Stick,Dove,2.91,4.29,-32.2,0,None,0,0,76,87,11,0,None,34000,60000,-43,1,Pricing,Walmart,Grocery
+21-09-2026,San Jose,Mitchum,Dove,3.21,4.29,-25.2,1,Bundle,18,14,63,83,20,0,None,49000,82000,-40,1,Pricing,CVS,Drug
+28-09-2026,New York,Degree,Dove,4.68,4.39,6.6,1,Buy One Get One,20,7,89,85,-4,0,None,134000,104000,22,1,Pricing,Walmart,Grocery
+28-09-2026,Los Angeles,Old Spice,Dove,3.91,4.39,-10.9,1,Bundle Discount,15,14,82,87,5,1,Old Spice Defiance Spray,95000,84000,11,0,Distribution,Target,Mass Merch
+28-09-2026,Chicago,Secret,Dove,3.67,4.39,-16.4,0,None,0,0,90,85,-5,0,None,62000,71000,-12,1,Loyalty,Walgreens,Drug
+28-09-2026,Houston,Rexona,Dove,3.37,4.39,-23.2,1,Loyalty Bonus,10,30,69,86,17,0,None,40000,51000,-21,1,Pricing,Walmart,Grocery
+28-09-2026,Phoenix,Axe,Dove,3.57,4.39,-18.7,1,Clearance,25,7,65,83,18,0,None,73000,88000,-17,0,Distribution,Target,Mass Merch
+28-09-2026,Philadelphia,Native,Dove,5.19,4.39,18.2,1,Subscription Discount,8,90,55,84,29,1,Native Refillable Launch,118000,97000,18,0,Innovation,Target,E-commerce
+28-09-2026,San Antonio,Suave,Dove,2.37,4.39,-46,1,Volume Discount,12,21,42,85,43,1,Suave Ultra Value Campaign,29000,95000,-69,1,Pricing,Walmart,Grocery
+28-09-2026,San Diego,Gillette,Dove,5.19,4.39,18.2,1,Innovation Launch,12,30,77,84,7,1,Gillette SkinGuard Expanded,104000,78000,25,0,Innovation,Walgreens,Drug
