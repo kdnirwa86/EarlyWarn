@@ -91,16 +91,18 @@ def calculate_signals(data):
                     our_price = float(row.get('our_price', 4.39))
 
                     # Calculate metrics from circana if available
-                    conversion_impact = "-22%"
-                    share_loss = "-1.8pp/week"
+                    conversion_impact = "Data not available"  # Removed hardcoded value
+                    share_loss = "Data not available"
 
                     if len(circana) > 0 and 'market_share_pct' in circana.columns:
                         try:
                             share_values = circana['market_share_pct'].dropna()
                             if len(share_values) >= 2:
                                 share_loss = f"{(share_values.iloc[-1] - share_values.iloc[-2]):.1f}pp"
+                            else:
+                                share_loss = "Insufficient data"
                         except:
-                            pass
+                            share_loss = "Calculation error"
 
                     signal_1 = {
                         'id': 'price_war',
@@ -111,13 +113,13 @@ def calculate_signals(data):
                             'competitor_price': f"${competitor_price:.2f}",
                             'our_price': f"${our_price:.2f}",
                             'price_gap': f"{price_gap_pct:.1f}%",
-                            'conversion_impact': conversion_impact,
-                            'share_loss': share_loss
+                            'market_share_trend': share_loss,
+                            'urgency': "Immediate action required"
                         },
                         'confidence': 94,
                         'financial_impact': "$2.1M monthly at risk",
                         'response_window': "48 hours",
-                        'evidence_sources': ['Circana', 'Competitive Intelligence', 'E-Commerce', 'Social Voice', 'Macro'],
+                        'evidence_sources': ['Competitive Intelligence (primary)', 'Circana (market share impact)'],
                         'supporting_data': {
                             'competitor_price': competitor_price,
                             'our_price': our_price,
@@ -157,12 +159,12 @@ def calculate_signals(data):
                         'metrics': {
                             'stick_share': f"{stick_pct:.0f}%",
                             'aerosol_share': f"{aerosol_pct:.0f}%",
-                            'gel_growth': "+4pp YoY",
-                            'timeframe': "4-week trend"
+                            'gel_share': f"{gel_pct:.0f}%",
+                            'timeframe': "Current market snapshot"
                         },
                         'confidence': 88,
                         'format_breakdown': format_pct,
-                        'evidence_sources': ['Circana', 'E-Commerce', 'Competitive', 'Social Voice', 'Macro'],
+                        'evidence_sources': ['Circana (primary - format breakdown)'],
                         'supporting_data': {
                             'stick_pct': stick_pct,
                             'aerosol_pct': aerosol_pct,
@@ -200,26 +202,57 @@ def calculate_signals(data):
                 if len(social) > 0 and 'sentiment_score' in social.columns:
                     gel_sentiment = social['sentiment_score'].mean()
 
+                # Calculate actual YoY growth from Circana if available
+                gel_yoy_growth = "Data unavailable"
+                gel_market_value = "Calculating..."
+
+                if 'circana' in data and len(data['circana']) > 0:
+                    try:
+                        circana_full = data['circana']
+                        if 'format_type' in circana_full.columns and 'fiscal_year' in circana_full.columns:
+                            gel_circana = circana_full[circana_full['format_type'] == 'Gel']
+                            if len(gel_circana) > 0:
+                                gel_by_year = gel_circana.groupby('fiscal_year')['dollar_sales'].sum()
+                                if len(gel_by_year) >= 2:
+                                    years = sorted(gel_by_year.index)
+                                    if len(years) >= 2:
+                                        sales_prev = gel_by_year[years[-2]]
+                                        sales_curr = gel_by_year[years[-1]]
+                                        if sales_prev > 0:
+                                            yoy_pct = ((sales_curr - sales_prev) / sales_prev) * 100
+                                            gel_yoy_growth = f"{yoy_pct:.1f}% YoY"
+                    except:
+                        pass
+
+                # Calculate market value from e-commerce data
+                if gel_available and 'online_price_usd' in gel_data.columns:
+                    avg_price = gel_data['online_price_usd'].mean()
+                    if avg_price > 0 and gel_units > 0:
+                        market_val = gel_units * avg_price
+                        gel_market_value = f"${market_val:,.0f} online"
+
                 signal_3 = {
                     'id': 'gel_opportunity',
                     'type': 'opportunity',
                     'title': 'Gel Format Emerging',
-                    'subtitle': 'Strong growth opportunity, eco-driven consumer preference',
+                    'subtitle': 'Emerging market format with strong online performance and eco-conscious consumer support',
                     'metrics': {
-                        'growth_rate': "+12% YoY",
-                        'market_size': "$180M+ annual",
-                        'conversion_uplift': f"+{(gel_conversion*100):.1f}% online",
-                        'target_demo': "Female 25-40, Gen Z eco-conscious"
+                        'market_trend': gel_yoy_growth,
+                        'online_market_size': gel_market_value,
+                        'online_conversion': f"+{(gel_conversion*100):.1f}% conversion rate",
+                        'customer_satisfaction': f"{gel_rating:.1f}/5.0 rating"
                     },
                     'confidence': 85,
                     'gel_conversion': f"{(gel_conversion*100):.1f}%",
                     'gel_rating': f"{gel_rating:.1f}/5.0",
                     'social_sentiment': f"{gel_sentiment:.2f}",
-                    'evidence_sources': ['Circana', 'E-Commerce', 'Social Voice', 'Competitive'],
+                    'evidence_sources': ['E-Commerce', 'Social Voice'],
                     'supporting_data': {
                         'conversion_rate': gel_conversion,
                         'rating': gel_rating,
                         'sentiment': gel_sentiment,
+                        'yoy_trend': gel_yoy_growth,
+                        'market_value': gel_market_value,
                         'data_source': 'ecommerce_deo_us.csv & social_voice_deo_us.csv'
                     }
                 }
@@ -246,12 +279,12 @@ def calculate_signals(data):
                             'id': 'distribution_loss',
                             'type': 'critical',
                             'title': 'Distribution Loss Alert',
-                            'subtitle': 'Shelf space declining in key retailers',
+                            'subtitle': 'Shelf space declining - urgent retail response needed',
                             'metrics': {
-                                'distribution_pct': f"{current_dist:.1f}%",
-                                'change_week_over_week': f"{distribution_change:.1f}pp",
-                                'affected_retailers': "5+ retail chains",
-                                'urgency': "High - impacts volume"
+                                'current_distribution': f"{current_dist:.1f}%",
+                                'week_over_week_change': f"{distribution_change:.1f}pp",
+                                'trend_direction': "Declining",
+                                'alert_status': "Critical - accelerating loss"
                             },
                             'confidence': 92,
                             'financial_impact': "$1.5M quarterly revenue risk",
@@ -289,12 +322,12 @@ def calculate_signals(data):
                                 'id': 'promo_dependency',
                                 'type': 'warning',
                                 'title': 'Promo Dependency Crisis',
-                                'subtitle': 'Volume only moving on promotions, baseline eroding',
+                                'subtitle': 'Volume heavily dependent on promotions - baseline eroding',
                                 'metrics': {
-                                    'promo_dependent_volume': f"{promo_dependency:.1f}%",
-                                    'baseline_units_risk': "High deterioration",
-                                    'margin_compression': "-8% to -12% margin impact",
-                                    'timeframe': "Last 4 weeks"
+                                    'promo_volume_percentage': f"{promo_dependency:.1f}%",
+                                    'full_price_volume': f"{(100-promo_dependency):.1f}%",
+                                    'trend_alert': "High promo reliance",
+                                    'action_required': "Rebuild baseline demand"
                                 },
                                 'confidence': 87,
                                 'financial_impact': "$2.8M margin loss annually",
@@ -327,12 +360,12 @@ def calculate_signals(data):
                         'id': 'competitor_innovation',
                         'type': 'warning',
                         'title': 'Competitor Innovation Threat',
-                        'subtitle': 'Competitors launching new formats while we lag',
+                        'subtitle': 'Competitors launching new product innovations',
                         'metrics': {
-                            'competitor_launches': f"{launch_count} new SKUs",
-                            'format_gap': "We lack Gel format response",
-                            'market_impact': "Trial loss to competitor innovation",
-                            'capture_window': "4-6 weeks to respond"
+                            'competitor_launches_detected': f"{launch_count} new SKUs",
+                            'launch_types': "Multiple formats and varieties",
+                            'market_response_needed': "Yes",
+                            'competitive_risk': "Market share at risk"
                         },
                         'confidence': 89,
                         'financial_impact': "$1.2M share loss risk if unresponded",
@@ -366,12 +399,12 @@ def calculate_signals(data):
                             'id': 'rating_crisis',
                             'type': 'critical',
                             'title': 'Online Rating Collapse',
-                            'subtitle': 'Customer quality concerns amplified on e-commerce',
+                            'subtitle': 'E-commerce ratings below 4.2 star threshold',
                             'metrics': {
-                                'current_rating': f"{avg_rating:.1f}/5.0",
-                                'reviews_analyzed': f"{len(rated)} products",
-                                'negative_sentiment': "Quality complaints spike",
-                                'impact': "Conversion loss 15-25%"
+                                'average_rating': f"{avg_rating:.1f}/5.0",
+                                'products_rated': f"{len(rated)} products analyzed",
+                                'below_threshold': f"{len(rated[rated['customer_rating'] < 4.2])} products",
+                                'total_reviews': f"{int(rated['review_count'].sum())} reviews"
                             },
                             'confidence': 86,
                             'financial_impact': "$800K monthly conversion loss",
@@ -408,17 +441,17 @@ def calculate_signals(data):
                         'id': 'quality_complaints',
                         'type': 'critical',
                         'title': 'Quality Complaint Surge',
-                        'subtitle': 'Consumer complaints trending up - PR risk',
+                        'subtitle': 'Social media complaints and sentiment trending downward',
                         'metrics': {
-                            'avg_complaints_per_source': f"{avg_complaints:.0f} mentions",
-                            'peak_complaints': f"{int(max_complaints)} max",
-                            'sentiment_score': f"{avg_sentiment:.2f} / 1.00 (normalized)",
-                            'primary_issues': "Deodorant effectiveness, packaging durability"
+                            'average_complaints': f"{avg_complaints:.0f} mentions per source",
+                            'peak_volume': f"{int(max_complaints)} complaints (max)",
+                            'sentiment_score': f"{avg_sentiment:.2f}/1.0",
+                            'sentiment_status': "Below normal (-1 very negative, +1 very positive)"
                         },
                         'confidence': 90,
                         'financial_impact': "$500K brand reputation risk",
                         'response_window': "Immediate PR response required",
-                        'evidence_sources': ['Social Voice', 'E-Commerce', 'Circana'],
+                        'evidence_sources': ['Social Voice (primary data source)'],
                         'supporting_data': {
                             'avg_complaints_per_source': float(avg_complaints),
                             'max_complaints': int(max_complaints),
